@@ -29,3 +29,13 @@ class HealthResponse(BaseModel):
     ollama: bool
     feeds_count: int
     cache_size: int
+
+
+class AskRequest(BaseModel):
+    question: str
+    top_k: int = 3
+    
+class AskResponse(BaseModel):
+    answer: str
+    sources: list[str] #les document utilisé
+    question: str

@@ -2,11 +2,12 @@ import logging
 
 from fastapi import FastAPI
 
-from src.api.schemas import SentimentResponse, SummaryResponse, HealthResponse, SentimentSchema
+from src.api.schemas import SentimentResponse, SummaryResponse, HealthResponse, SentimentSchema, AskRequest, AskResponse
 from src.application.get_sentiment import GetSentiment
 from src.application.build_summary import BuildSummary
 from src.domain.interfaces.llm_client import LLMClient
 from src.domain.services.sentiment_service import SentimentReport
+
 
 logger = logging.getLogger("feedtrade.api")
 
@@ -52,4 +53,17 @@ def register_routes(app: FastAPI, deps: dict):
             ollama=ollama_ok,
             feeds_count=len(feeds),
             cache_size=llm.cache_size,
+        )
+    
+    
+    from src.application.ask_rag import AskRAG
+    ask_rag = AskRAG()
+    
+    @app.post('/ask', response_model=AskResponse)
+    async def ask_endpoint(req: AskRequest):
+        result = await ask_rag.execute(req.question, req.top_k)
+        return AskResponse(
+            answer=result["answer"],
+            sources=result["sources"],
+            question=result["question"]
         )
