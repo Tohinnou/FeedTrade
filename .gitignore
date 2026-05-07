@@ -29,6 +29,15 @@ venv/
 .idea/
 *.swp
 *.swo
+.claude/
+
+# Test / coverage / type-check caches
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Environment Variables
 .env
@@ -42,6 +51,9 @@ chroma_db/
 # Personal notes / scratch
 memoire.md
 test_ollama.py
+ghl.md
+intel.md
+pfe.md
 
 # OS
 .DS_Store
