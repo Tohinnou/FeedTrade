@@ -1,0 +1,96 @@
+[project]
+name = "feedtrade"
+version = "0.1.0"
+description = "Forex sentiment screener — RAG + agents on Forex news feeds"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--tb=short",
+]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "integration: tests touching real I/O (DB, network, Ollama). Skipped by default in CI.",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:pydantic.*",
+    "ignore::DeprecationWarning:sqlalchemy.*",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = ["tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 70
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["chroma_db", "migrations/versions"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+    "ASYNC", # flake8-async
+]
+ignore = [
+    "E501",  # line too long — formatter handles it
+    "B008",  # function calls in defaults (FastAPI Depends pattern)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "N802"]  # asserts allowed in tests
+"test_rag_*.py" = ["F401", "F841"]  # legacy exploration scripts
+"test_ollama.py" = ["F401", "F841"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+show_error_codes = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+module = [
+    "feedparser.*",
+    "chromadb.*",
+    "sentence_transformers.*",
+    "groq.*",
+    "aiohttp.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
