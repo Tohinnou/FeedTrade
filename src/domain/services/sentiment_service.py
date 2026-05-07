@@ -1,7 +1,8 @@
 from collections import Counter
 from typing import Optional
 
-from src.domain.models.article import AnalysisResult, Sentiment
+from src.domain.models.analysis import AnalysisResult
+from src.domain.models.sentiment import Sentiment
 
 
 class SentimentReport:

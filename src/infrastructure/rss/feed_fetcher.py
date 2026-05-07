@@ -5,7 +5,8 @@ from typing import Optional
 import feedparser
 
 from src.domain.interfaces.rss_fetcher import RSSFetcher
-from src.domain.models.article import Article, FeedConfig
+from src.domain.models.article import Article 
+from src.domain.models.feed import FeedConfig
 
 logger = logging.getLogger("feedtrade.infrastructure.rss")
 

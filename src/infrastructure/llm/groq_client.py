@@ -10,7 +10,7 @@ from groq import AsyncGroq
 
 from src.domain.interfaces.cache import Cache
 from src.domain.interfaces.llm_client import LLMClient
-from src.domain.models.article import Sentiment
+from src.domain.models.sentiment import Sentiment
 
 logger = logging.getLogger("feedtrade.infrastructure.llm.groq")
 

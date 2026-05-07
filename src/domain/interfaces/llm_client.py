@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from src.domain.models.article import Sentiment
+from src.domain.models.sentiment import Sentiment
 
 
 class LLMClient(ABC):

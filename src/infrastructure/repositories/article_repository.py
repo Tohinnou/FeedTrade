@@ -5,7 +5,8 @@ import html
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.domain.models.article import Article, Sentiment
+from src.domain.models.article import Article
+from src.domain.models.sentiment import Sentiment
 from src.domain.interfaces.article_repository import ArticleRepository
 from src.infrastructure.database.models import ArticleModel, SentimentModel
 

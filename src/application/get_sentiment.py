@@ -4,7 +4,8 @@ import time
 
 from src.domain.interfaces.llm_client import LLMClient
 from src.domain.interfaces.rss_fetcher import RSSFetcher
-from src.domain.models.article import Article, AnalysisResult
+from src.domain.models.article import Article
+from src.domain.models.analysis import AnalysisResult
 
 logger = logging.getLogger("feedtrade.application")
 

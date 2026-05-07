@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from datetime import datetime
 
-from src.domain.models.article import Article, Sentiment
+from src.domain.models.article import Article
+from src.domain.models.sentiment import Sentiment
 
 
 class ArticleRepository(ABC):

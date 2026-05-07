@@ -50,7 +50,7 @@ class AskRAG:
         )
         
     return {
-            "answer": response.choices[0].message.content,
-            "sources": results["documents"][0],
-            "question": question
-      }
+        "answer": response.choices[0].message.content,
+        "sources": results["documents"][0],
+        "question": question
+    }

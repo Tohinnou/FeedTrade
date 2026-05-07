@@ -2,7 +2,7 @@ import logging
 import time
 
 from src.domain.interfaces.rss_fetcher import RSSFetcher
-from src.domain.models.article import AnalysisResult
+from src.domain.models.analysis import AnalysisResult
 from src.domain.services.sentiment_service import SentimentReport
 from src.application.get_sentiment import GetSentiment
 
