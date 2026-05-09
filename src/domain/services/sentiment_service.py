@@ -1,8 +1,6 @@
 from collections import Counter
-from typing import Optional
 
 from src.domain.models.analysis import AnalysisResult
-from src.domain.models.sentiment import Sentiment
 
 
 class SentimentReport:
@@ -34,13 +32,13 @@ class SentimentReport:
 
         return {
             pair: {
-                "sentiment": self._majority(list(counts.keys())),
+                "sentiment": max(counts, key=counts.get),
                 "counts": counts,
             }
             for pair, counts in pairs.items()
         }
 
-    def pair_sentiment(self, pair: str) -> Optional[str]:
+    def pair_sentiment(self, pair: str) -> str | None:
         summary = self.summary()
         return summary.get(pair)
 
