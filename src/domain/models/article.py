@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -9,10 +8,9 @@ class Article:
     title: str
     summary: str
     source: str
-    published: Optional[datetime] = None
-    url: Optional[str] = None
+    published: datetime | None = None
+    url: str | None = None
 
     @property
     def brief(self) -> str:
         return f"{self.title} {self.summary[:200]}".strip()
-

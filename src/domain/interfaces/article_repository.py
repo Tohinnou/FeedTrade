@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 from datetime import datetime
 
 from src.domain.models.article import Article
@@ -16,7 +15,7 @@ class ArticleRepository(ABC):
         """Save a sentiment analysis result."""
 
     @abstractmethod
-    async def get_article_by_url(self, url: str) -> Optional[Article]:
+    async def get_article_by_url(self, url: str) -> Article | None:
         """Check if an article already exists to avoid duplicates."""
 
     @abstractmethod

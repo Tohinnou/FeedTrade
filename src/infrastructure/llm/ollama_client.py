@@ -3,7 +3,6 @@ import json
 import logging
 import re
 from dataclasses import dataclass
-from typing import Optional
 
 import aiohttp
 
@@ -39,7 +38,7 @@ class OllamaClient(LLMClient):
         self.config = config
         self.cache = cache
         self._failures = 0
-        self._recovery_at: Optional[float] = None
+        self._recovery_at: float | None = None
         self._semaphore = asyncio.Semaphore(config.max_concurrent)
 
     async def analyze_sentiment(self, article_id: int, text: str) -> Sentiment:
@@ -117,7 +116,9 @@ class OllamaClient(LLMClient):
     def _record_failure(self) -> None:
         self._failures += 1
         if self._failures >= self.config.circuit_breaker_threshold:
-            self._recovery_at = asyncio.get_event_loop().time() + self.config.circuit_breaker_recovery
+            self._recovery_at = (
+                asyncio.get_event_loop().time() + self.config.circuit_breaker_recovery
+            )
             logger.warning("Circuit breaker opened after %d failures", self._failures)
 
     def _record_success(self) -> None:

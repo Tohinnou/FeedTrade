@@ -1,16 +1,14 @@
-from src.domain.models.feed import FeedConfig
+from src.application.build_summary import BuildSummary
+from src.application.get_sentiment import GetSentiment
+from src.domain.interfaces.article_repository import ArticleRepository
 from src.domain.interfaces.cache import Cache
 from src.domain.interfaces.llm_client import LLMClient
 from src.domain.interfaces.rss_fetcher import RSSFetcher
-from src.domain.interfaces.article_repository import ArticleRepository
-
+from src.domain.models.feed import FeedConfig
 from src.infrastructure.cache.lru_cache import LRUCache
 from src.infrastructure.llm.groq_client import GroqClient, GroqConfig
-from src.infrastructure.rss.feed_fetcher import FeedParserFetcher, DEFAULT_FEEDS
 from src.infrastructure.repositories.article_repository import SQLAlchemyArticleRepository
-
-from src.application.get_sentiment import GetSentiment
-from src.application.build_summary import BuildSummary
+from src.infrastructure.rss.feed_fetcher import DEFAULT_FEEDS, FeedParserFetcher
 
 
 class Container:
@@ -18,9 +16,9 @@ class Container:
 
     def __init__(
         self,
-        groq_api_key: str = None,
+        groq_api_key: str | None = None,
         groq_model: str = "llama-3.1-8b-instant",
-        feeds: list[FeedConfig] = None,
+        feeds: list[FeedConfig] | None = None,
         articles_per_feed: int = 1,
         cache_max_size: int = 100,
         cache_ttl: int = 120,
@@ -46,9 +44,7 @@ class Container:
         )
 
         # Application
-        self._get_sentiment = GetSentiment(
-            fetcher=self._fetcher, llm=self._llm, repo=self._repo
-        )
+        self._get_sentiment = GetSentiment(fetcher=self._fetcher, llm=self._llm, repo=self._repo)
         self._build_summary = BuildSummary(get_sentiment=self._get_sentiment)
 
         # Expose

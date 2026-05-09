@@ -1,11 +1,10 @@
 import logging
 from datetime import datetime
-from typing import Optional
 
 import feedparser
 
 from src.domain.interfaces.rss_fetcher import RSSFetcher
-from src.domain.models.article import Article 
+from src.domain.models.article import Article
 from src.domain.models.feed import FeedConfig
 
 logger = logging.getLogger("feedtrade.infrastructure.rss")
@@ -55,7 +54,7 @@ class FeedParserFetcher(RSSFetcher):
             return []
 
     @staticmethod
-    def _parse_date(raw: Optional[str]) -> Optional[datetime]:
+    def _parse_date(raw: str | None) -> datetime | None:
         if not raw:
             return None
         try:

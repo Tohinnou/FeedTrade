@@ -1,10 +1,9 @@
 import asyncio
-import os
 import json
 import logging
+import os
 import re
 from dataclasses import dataclass
-from typing import Optional
 
 from groq import AsyncGroq
 
@@ -18,7 +17,7 @@ logger = logging.getLogger("feedtrade.infrastructure.llm.groq")
 @dataclass
 class GroqConfig:
     model: str = "llama-3.1-8b-instant"
-    api_key: Optional[str] = None
+    api_key: str | None = None
     timeout: float = 30
     max_concurrent: int = 5
     circuit_breaker_threshold: int = 5
@@ -44,7 +43,7 @@ class GroqClient(LLMClient):
             raise ValueError("GROQ_API_KEY is required.")
         self.client = AsyncGroq(api_key=api_key)
         self._failures = 0
-        self._recovery_at: Optional[float] = None
+        self._recovery_at: float | None = None
         self._semaphore = asyncio.Semaphore(config.max_concurrent)
 
     async def analyze_sentiment(self, article_id: int, text: str) -> Sentiment:
@@ -104,6 +103,7 @@ class GroqClient(LLMClient):
     @property
     def _circuit_open(self) -> bool:
         import asyncio
+
         if self._recovery_at and asyncio.get_event_loop().time() < self._recovery_at:
             return True
         if self._recovery_at:
@@ -115,7 +115,10 @@ class GroqClient(LLMClient):
         self._failures += 1
         if self._failures >= self.config.circuit_breaker_threshold:
             import asyncio
-            self._recovery_at = asyncio.get_event_loop().time() + self.config.circuit_breaker_recovery
+
+            self._recovery_at = (
+                asyncio.get_event_loop().time() + self.config.circuit_breaker_recovery
+            )
             logger.warning("Groq Circuit breaker opened after %d failures", self._failures)
 
     def _record_success(self) -> None:

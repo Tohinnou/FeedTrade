@@ -4,8 +4,8 @@ import time
 
 from src.domain.interfaces.llm_client import LLMClient
 from src.domain.interfaces.rss_fetcher import RSSFetcher
-from src.domain.models.article import Article
 from src.domain.models.analysis import AnalysisResult
+from src.domain.models.article import Article
 
 logger = logging.getLogger("feedtrade.application")
 
@@ -46,13 +46,12 @@ class GetSentiment:
     async def _sync_articles_to_db(self, articles: list[Article]) -> list[Article]:
         synced = []
         for article in articles:
-            
             if article.url:
                 existing = await self.repo.get_article_by_url(article.url)
                 if existing:
                     synced.append(existing)
                     continue
-            
+
             if article.title:
                 existing = await self.repo.get_article_by_title_source(
                     article.title, article.source
@@ -60,7 +59,7 @@ class GetSentiment:
                 if existing:
                     synced.append(existing)
                     continue
-                
+
             # Save new article to get ID
             synced.append(await self.repo.save_article(article))
         return synced
@@ -70,10 +69,7 @@ class GetSentiment:
             await self.repo.save_sentiment(s)
 
     async def _analyze_all(self, articles: list[Article]) -> list:
-        tasks = [
-            self.llm.analyze_sentiment(article.id, article.brief)
-            for article in articles
-        ]
+        tasks = [self.llm.analyze_sentiment(article.id, article.brief) for article in articles]
         results = await asyncio.gather(*tasks)
         logger.info("Analyzed %d articles", len(results))
         return list(results)

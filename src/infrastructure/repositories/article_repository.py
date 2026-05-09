@@ -1,13 +1,12 @@
-from datetime import datetime
-from typing import Optional
 import html
+from datetime import datetime
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.domain.interfaces.article_repository import ArticleRepository
 from src.domain.models.article import Article
 from src.domain.models.sentiment import Sentiment
-from src.domain.interfaces.article_repository import ArticleRepository
 from src.infrastructure.database.models import ArticleModel, SentimentModel
 
 
@@ -53,12 +52,12 @@ class SQLAlchemyArticleRepository(ArticleRepository):
         await self.session.commit()
         return sentiment
 
-    async def get_article_by_url(self, url: str) -> Optional[Article]:
+    async def get_article_by_url(self, url: str) -> Article | None:
         normalized = self.normalize_url(url)
-        
+
         if not normalized:
             return None
-        
+
         stmt = select(ArticleModel).where(ArticleModel.url == normalized)
         result = await self.session.execute(stmt)
         model = result.scalar_one_or_none()
@@ -91,14 +90,12 @@ class SQLAlchemyArticleRepository(ArticleRepository):
             )
             for m in models
         ]
-    
-    
-    async def get_article_by_title_source(self, title: str, source: str) -> Optional[Article]:
+
+    async def get_article_by_title_source(self, title: str, source: str) -> Article | None:
         stmt = select(ArticleModel).where(
-           ArticleModel.title == title,
-           ArticleModel.source == source
+            ArticleModel.title == title, ArticleModel.source == source
         )
-       
+
         result = await self.session.execute(stmt)
         model = result.scalar_one_or_none()
         if model:
@@ -111,16 +108,16 @@ class SQLAlchemyArticleRepository(ArticleRepository):
                 url=model.url,
             )
         return None
-       
+
     @staticmethod
     def normalize_url(url: str) -> str:
         if not url:
             return ""
-        
-        #strip whitespace
+
+        # strip whitespace
         url = url.strip()
-        #Decode HTML entities
+        # Decode HTML entities
         url = html.unescape(url)
-        #Remove trailing slashes
-        url = url.rstrip('/')
+        # Remove trailing slashes
+        url = url.rstrip("/")
         return url

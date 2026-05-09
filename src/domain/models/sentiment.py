@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import Optional
 
 _INVALID_PAIRS = {"UNKNOWN", "PARSE_ERR", "ERROR", "TIMEOUT", "HORS_SCOPE", "CIRCUIT_OPEN"}
 _VALID_SENTIMENTS = {"BULLISH", "BEARISH", "NEUTRAL"}
+
 
 @dataclass(frozen=True)
 class Sentiment:
@@ -10,7 +10,7 @@ class Sentiment:
     pair: str
     sentiment: str
     reason: str
-    raw_response: Optional[str] = None
+    raw_response: str | None = None
 
     @property
     def is_valid(self) -> bool:
