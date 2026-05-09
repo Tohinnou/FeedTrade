@@ -62,3 +62,25 @@ class TestLRUEviction:
 
         assert cache.get("k1") == "v1"
         assert cache.get("k2") is None
+
+
+class TestSetOverwrite:
+    def test_set_overwrites_existing_value(self):
+        cache = LRUCache(max_size=10)
+        cache.set("k", "v1")
+        cache.set("k", "v2")
+
+        assert cache.get("k") == "v2"
+        assert cache.size == 1
+
+
+class TestClear:
+    def test_clear_removes_all_entries(self):
+        cache = LRUCache(max_size=10)
+        cache.set("k1", "v1")
+        cache.set("k2", "v2")
+        cache.clear()
+
+        assert cache.get("k1") is None
+        assert cache.get("k2") is None
+        assert cache.size == 0

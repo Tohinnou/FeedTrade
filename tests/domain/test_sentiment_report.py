@@ -106,6 +106,21 @@ class TestDetailedBreakdown:
             },
         }
 
+    def test_filters_invalid_sentiments(self):
+        sentiments = [
+            make_sentiment("EUR/USD", "BULLISH"),
+            make_sentiment("EUR/USD", "BULLISH"),
+            make_sentiment("UNKNOWN", "BULLISH"),
+            make_sentiment("EUR/USD", "PARSE_ERR"),
+        ]
+        result = make_analysis_result(sentiments)
+        report = SentimentReport(result)
+        assert report.detailed_breakdown() == {
+            "EUR/USD": {
+                "sentiment": "BULLISH",
+                "counts": {"BULLISH": 2, "BEARISH": 0, "NEUTRAL": 0},
+            },
+        }
 
 class TestPairSentiment:
     def test_returns_string_when_pair_exists(self):
